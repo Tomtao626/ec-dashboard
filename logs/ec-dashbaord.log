@@ -1,0 +1,10 @@
+INFO 04-30 17:38:27 autoreload 637 Watching for file changes with StatReloader
+INFO 04-30 17:40:19 autoreload 251 /Users/tao626/Documents/workspaces/pywork/ec-dashboard/apps/base/urls.py changed, reloading.
+INFO 04-30 17:40:20 autoreload 637 Watching for file changes with StatReloader
+INFO 04-30 17:44:08 autoreload 637 Watching for file changes with StatReloader
+WARNING 04-30 17:44:11 log 224 Not Found: /
+WARNING 04-30 17:44:11 basehttp 161 "GET / HTTP/1.1" 404 3122
+WARNING 04-30 17:44:11 log 224 Not Found: /favicon.ico
+WARNING 04-30 17:44:11 basehttp 161 "GET /favicon.ico HTTP/1.1" 404 3173
+WARNING 04-30 17:44:19 log 224 Not Found: /doc
+WARNING 04-30 17:44:19 basehttp 161 "GET /doc HTTP/1.1" 404 3149

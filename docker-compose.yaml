@@ -1,0 +1,16 @@
+version: "3"
+services:
+  ecdashboard:
+    #指定镜像
+    image: ecdashboard:v0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    #指定容器名称
+    container_name: ecdashboard
+    ports:
+      - 8000:8000
+    volumes:
+    - /data/ai_model:/app/models
+    #开机自启
+    restart: always

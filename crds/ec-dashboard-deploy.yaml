@@ -1,0 +1,108 @@
+#后端接口
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    kubeedge-app: ec-dashboard
+  name: ec-dashboard
+  namespace: ec-dashboard
+spec:
+  selector:
+    matchLabels:
+      kubeedge-app: ec-dashboard
+  template:
+    metadata:
+      labels:
+        kubeedge-app: ec-dashboard
+    spec:
+      nodeName: master
+      restartPolicy: Always
+      imagePullSecrets:
+      #镜像拉取秘钥
+      - name: docker-secret
+      containers:
+      - name: ec-dashboard
+        image: edge.imooc.com/imooc_containers/ec-dashboard:v1
+        imagePullPolicy: Always
+        env:
+        - name: MYSQL_HOST
+          value: 139.155.48.64
+        volumeMounts:
+        - mountPath: /app/models
+          name: ai-model
+      #master节点容忍
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      volumes:
+      - name: ai-model
+        hostPath:
+          path: /data/ai_model
+#前端应用
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    kubeedge-app: ec-dashboard-web
+  name: ec-dashboard-web
+  namespace: ec-dashboard
+spec:
+  selector:
+    matchLabels:
+      kubeedge-app: ec-dashboard-web
+  template:
+    metadata:
+      labels:
+        kubeedge-app: ec-dashboard-web
+    spec:
+      nodeName: master
+      restartPolicy: Always
+      imagePullSecrets:
+      #镜像拉取秘钥
+      - name: docker-secret
+      containers:
+      - name: ec-dashboard-web
+        image: edge.imooc.com/imooc_containers/ec-dashboard-web:v1
+        imagePullPolicy: Always
+        env:
+        - name: EC_DASHBOARD_HOST
+          value: http://ec-dashboard-svc:8000/
+      #master节点容忍
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+---
+#接口访问
+apiVersion: v1
+kind: Service
+metadata:
+  name: ec-dashboard-svc
+  namespace: ec-dashboard
+spec:
+  selector:
+    kubeedge-app: ec-dashboard
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  type: ClusterIP
+---
+#界面访问
+apiVersion: v1
+kind: Service
+metadata:
+  name: ec-dashboard-web-svc
+  namespace: ec-dashboard
+spec:
+  selector:
+    kubeedge-app: ec-dashboard-web
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+    # 外部访问地址
+    nodePort: 30080
+  type: NodePort
